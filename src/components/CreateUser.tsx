@@ -1,30 +1,22 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../redux/store";
 
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  gender: string;
-  age: string;
-  city: string;
-  role: string;
-  status: string;
-}
+import { createUser } from "../redux/reducers/userSlice";
+import type { FormData } from "./FormData";
 
 const CreateUser = () => {
+const dispatch = useDispatch<AppDispatch>();
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     phone: "",
     gender: "",
-    age: "",
-    city: "",
-    role: "",
-    status: "",
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -35,28 +27,22 @@ const CreateUser = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("formData", formData);
     e.preventDefault();
-
-    console.log("Form Data:", formData);
+    dispatch(createUser(formData))
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
-        
         {/* Heading */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            User Information
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-800">User Information</h1>
 
-          <p className="text-sm text-gray-500 mt-1">
-            Enter user details below
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Enter user details below</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -128,82 +114,6 @@ const CreateUser = () => {
             </select>
           </div>
 
-          {/* Age */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Age
-            </label>
-
-            <input
-              type="number"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              placeholder="Enter age"
-              min="1"
-              max="100"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5
-              outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          {/* City */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              City
-            </label>
-
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="Enter city"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5
-              outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Role */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Role
-            </label>
-
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5
-              outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">Select role</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="manager">Manager</option>
-              <option value="developer">Developer</option>
-            </select>
-          </div>
-
-          {/* Status */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Status
-            </label>
-
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5
-              outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">Select status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </div>
-
           {/* Buttons */}
           <div className="flex gap-3 pt-4">
             <button
@@ -222,10 +132,6 @@ const CreateUser = () => {
                   email: "",
                   phone: "",
                   gender: "",
-                  age: "",
-                  city: "",
-                  role: "",
-                  status: "",
                 })
               }
               className="flex-1 bg-gray-200 text-gray-700 py-2.5 rounded-lg
@@ -234,7 +140,6 @@ const CreateUser = () => {
               Reset
             </button>
           </div>
-
         </form>
       </div>
     </div>
