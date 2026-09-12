@@ -3,7 +3,14 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../redux/store";
 
 import { createUser } from "../redux/reducers/userSlice";
-import type { FormData } from "./FormData";
+
+
+ interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  gender: string;
+}
 
 const CreateUser = () => {
 const dispatch = useDispatch<AppDispatch>();

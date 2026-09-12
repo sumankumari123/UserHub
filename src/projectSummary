@@ -1,0 +1,38 @@
+// // task Summary
+
+// Created a User Form UI with:
+// id?
+// Name
+// Email
+// Phone
+// Gender
+
+// Integrated Axios with MockAPI.
+// Implemented GET API using createAsyncThunk.
+
+// Added Redux extraReducers for:
+// pending → loading
+// fulfilled → store API data
+// rejected → error handling
+// Fixed Redux userSlice.reducer configuration in configureStore.
+
+// Configured TypeScript:
+// RootState
+// AppDispatch
+
+// Connected form/API dispatch using:
+// dispatch(createUser(formData))
+
+// Created AllPosts component.
+// Retrieved userData, loading, and error from Redux.
+
+// Added conditional rendering using the ternary operator:
+// loading ? Skeleton : error ? Error : Data
+
+// Added skeleton loading UI for the API loading state.
+// Started setting up typed Redux hooks to solve the unknown TypeScript error.
+// Created a fixed Navbar with:
+// Home
+// All Posts
+// Search bar
+// Fixed position on scroll
