@@ -1,15 +1,18 @@
-
 import { useEffect } from "react";
-import type{ AppDispatch, RootState } from "../redux/store";
+import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../redux/reducers/userSlice";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { closeEditDrawer, openEditDrawer } from "../redux/reducers/userSlice";
+import EditUserDrawer from "./drawer/EditUserDrawer";
 
 const AllPosts = () => {
-const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { userData, loading, error } = useSelector<RootState, RootState["user"]>(
-  (state) => state.user
-);
+  const { userData, loading, error } = useSelector<
+    RootState,
+    RootState["user"]
+  >((state) => state.user);
 
   // Fetch users when component loads
   useEffect(() => {
@@ -17,10 +20,11 @@ const dispatch = useDispatch<AppDispatch>();
   }, [dispatch]);
 
   return (
+    <>
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           All Posts
         </h1>
 
@@ -60,28 +64,57 @@ const dispatch = useDispatch<AppDispatch>();
             {userData.map((user) => (
               <div
                 key={user.id}
-                className="bg-white rounded-xl shadow-md p-5
-                hover:shadow-lg transition"
+                className="w-[25rem] h-[18rem] bg-white rounded-xl shadow-md p-5
+                hover:shadow-lg transition flex flex-col"
               >
-                <h2 className="text-xl font-semibold text-gray-800 mb-3">
-                  {user.name}
-                </h2>
+                {/* User Information */}
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-3">
+                    {user.name}
+                  </h2>
 
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p>
-                    <span className="font-medium">Email:</span>{" "}
-                    {user.email}
-                  </p>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p>
+                      <span className="font-medium">Email:</span>{" "}
+                      {user.email}
+                    </p>
 
-                  <p>
-                    <span className="font-medium">Phone:</span>{" "}
-                    {user.phone}
-                  </p>
+                    <p>
+                      <span className="font-medium">Phone:</span>{" "}
+                      {user.phone}
+                    </p>
 
-                  <p>
-                    <span className="font-medium">Gender:</span>{" "}
-                    {user.gender}
-                  </p>
+                    <p>
+                      <span className="font-medium">Gender:</span>{" "}
+                      {user.gender}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="border-t border-gray-200 pt-4 flex items-center justify-end gap-4">
+
+                  {/* Edit Button */}
+                  <button
+                    type="button"
+                    className="text-green-600 hover:text-green-800
+                    transition cursor-pointer"
+                    title="Edit User"
+                    onClick={() => dispatch(openEditDrawer(user))}
+                  >
+                    <FaEdit size={20} />
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    type="button"
+                    className="text-red-600 hover:text-red-800
+                    transition cursor-pointer"
+                    title="Delete User"
+                    onClick={() => console.log(user.id)}
+                  >
+                    <FaTrash size={18} />
+                  </button>
 
                 </div>
               </div>
@@ -93,12 +126,13 @@ const dispatch = useDispatch<AppDispatch>();
             No users found.
           </div>
         )}
-
       </div>
     </div>
+
+    <EditUserDrawer/>
+    </>
   );
 };
 
 export default AllPosts;
-
 

@@ -14,12 +14,17 @@ export interface userState {
   userData: user[];
   loading: boolean;
   error: string | null;
+
+  isDrawerOpen:boolean;
+  selectedUser: user | null; 
 }
 
 const initialState: userState = {
   userData: [],
   loading: false,
   error: null,
+  isDrawerOpen:false,
+  selectedUser: null
 };
 
 export const createUser = createAsyncThunk(
@@ -44,7 +49,7 @@ export const fetchUsers = createAsyncThunk(
       const response = await axios.get(
         "https://6aa35594e7ae868cdf7ad9e1.mockapi.io/crud",
       );
-      console.log("response", response);
+      // console.log("response", response);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue("Failed to fetch user");
@@ -55,7 +60,18 @@ export const fetchUsers = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+  openEditDrawer:(state,action)=>{
+    console.log("action.payload", action.payload)
+    state.selectedUser = action.payload;
+    state.isDrawerOpen = true;
+  },
+  closeEditDrawer:(state)=>{
+    // state.selectedUser = action.payload;
+    state.isDrawerOpen = false;
+  }
+
+  },
 
   extraReducers: (builder) => {
     builder
@@ -92,6 +108,6 @@ const userSlice = createSlice({
   },
 });
 
-export const {} = userSlice.actions;
+export const {openEditDrawer, closeEditDrawer} = userSlice.actions;
 
 export default userSlice.reducer;
