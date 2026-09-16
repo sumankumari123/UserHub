@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../redux/reducers/userSlice";
+import { fetchUsers,  openDeleteModel } from "../redux/reducers/userSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { closeEditDrawer, openEditDrawer } from "../redux/reducers/userSlice";
 import EditUserDrawer from "./drawer/EditUserDrawer";
+import DeleteUser from "./model/DeleteUser";
 
 const AllPosts = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -111,7 +112,7 @@ const AllPosts = () => {
                     className="text-red-600 hover:text-red-800
                     transition cursor-pointer"
                     title="Delete User"
-                    onClick={() => console.log(user.id)}
+                    onClick={() => dispatch(openDeleteModel(user))}
                   >
                     <FaTrash size={18} />
                   </button>
@@ -129,7 +130,9 @@ const AllPosts = () => {
       </div>
     </div>
 
+{/* Model component */}
     <EditUserDrawer/>
+    <DeleteUser/>    
     </>
   );
 };

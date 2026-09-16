@@ -15,16 +15,18 @@ export interface userState {
   loading: boolean;
   error: string | null;
 
-  isDrawerOpen:boolean;
-  selectedUser: user | null; 
+  isDrawerOpen: boolean;
+  selectedUser: user | null;
+  isDeleteModel: boolean;
 }
 
 const initialState: userState = {
   userData: [],
   loading: false,
   error: null,
-  isDrawerOpen:false,
-  selectedUser: null
+  isDrawerOpen: false,
+  selectedUser: null,
+  isDeleteModel: false,
 };
 
 export const createUser = createAsyncThunk(
@@ -61,16 +63,20 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-  openEditDrawer:(state,action)=>{
-    console.log("action.payload", action.payload)
-    state.selectedUser = action.payload;
-    state.isDrawerOpen = true;
-  },
-  closeEditDrawer:(state)=>{
-    // state.selectedUser = action.payload;
-    state.isDrawerOpen = false;
-  }
-
+    openEditDrawer: (state, action) => {
+      state.selectedUser = action.payload; // select user for delete
+      state.isDrawerOpen = true; // open Edit drawer
+    },
+    closeEditDrawer: (state) => {
+      state.isDrawerOpen = false;
+    },
+    openDeleteModel: (state, action) => {
+      state.selectedUser = action.payload; // select user for delete
+      state.isDeleteModel = true; // open delete drawer
+    },
+    closeDeleteModel: (state) => {
+      state.isDeleteModel = false;
+    },
   },
 
   extraReducers: (builder) => {
@@ -90,7 +96,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       });
 
-// fetchUser
+    // fetchUser
     builder
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
@@ -108,6 +114,11 @@ const userSlice = createSlice({
   },
 });
 
-export const {openEditDrawer, closeEditDrawer} = userSlice.actions;
+export const {
+  openEditDrawer,
+  closeEditDrawer,
+  openDeleteModel,
+  closeDeleteModel,
+} = userSlice.actions;
 
 export default userSlice.reducer;
