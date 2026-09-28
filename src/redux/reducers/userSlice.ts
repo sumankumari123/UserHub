@@ -18,6 +18,7 @@ export interface userState {
   isDrawerOpen: boolean;
   selectedUser: user | null;
   isDeleteModel: boolean;
+  searchUser : string;
 }
 
 const initialState: userState = {
@@ -27,6 +28,7 @@ const initialState: userState = {
   isDrawerOpen: false,
   selectedUser: null,
   isDeleteModel: false,
+  searchUser: "",
 };
 
 export const createUser = createAsyncThunk(
@@ -59,6 +61,38 @@ export const fetchUsers = createAsyncThunk(
   },
 );
 
+export const editSpecificUsers = createAsyncThunk(
+  "user/editSpecificUsers",
+  async (userPayload: user, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `https://6aa35594e7ae868cdf7ad9e1.mockapi.io/crud/${userPayload.id}`,
+        userPayload,
+      );
+      console.log("response", response);
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Failed to update user");
+    }
+  },
+);
+
+export const deleteSpecificUsers = createAsyncThunk(
+  "user/deleteSpecificUsers",
+  async (userPayload: user, thunkAPI) => {
+    try {
+      const response = await axios.delete(
+        `https://6aa35594e7ae868cdf7ad9e1.mockapi.io/crud/${userPayload.id}`,
+      );
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Failed to delete user");
+    }
+  },
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -77,7 +111,14 @@ const userSlice = createSlice({
     closeDeleteModel: (state) => {
       state.isDeleteModel = false;
     },
+    searchInputText:(state, action)=>{
+      // console.log("action.payload", action.payload)
+      state.searchUser = action.payload;
+    },
   },
+
+
+
 
   extraReducers: (builder) => {
     builder
@@ -111,6 +152,51 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
+
+    // editSpecificUsers
+    builder
+      .addCase(editSpecificUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editSpecificUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedUser = action.payload;
+        const index = state.userData.findIndex(
+          (user) => user.id === updatedUser.id,
+        );
+
+        if (index !== -1) {
+          state.userData[index] = updatedUser;
+        }
+
+        state.error = null;
+      })
+      .addCase(editSpecificUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    //deleteSpecificUsers
+    builder
+      .addCase(deleteSpecificUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(deleteSpecificUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        const deletedUser = action.payload;
+        state.userData = state.userData.filter(
+          (user) => user.id !== deletedUser.id,
+        );
+        state.error = null;
+      })
+
+      .addCase(deleteSpecificUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
@@ -119,6 +205,7 @@ export const {
   closeEditDrawer,
   openDeleteModel,
   closeDeleteModel,
+  searchInputText
 } = userSlice.actions;
 
 export default userSlice.reducer;

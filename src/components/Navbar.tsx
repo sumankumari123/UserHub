@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Routes, Route, Link } from 'react-router-dom';
+import type { AppDispatch, RootState } from "../redux/store";
+import { searchInputText } from "../redux/reducers/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 const Navbar = () => {
-  const [search, setSearch] = useState("");
+    const dispatch = useDispatch<AppDispatch>();
+
+const searchUser = useSelector((state: RootState) => state.user.searchUser);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -34,8 +40,8 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search posts..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchUser}
+            onChange={(e) => dispatch(searchInputText(e.target.value))}
             className="px-4 py-2 w-64 outline-none"
           />
 

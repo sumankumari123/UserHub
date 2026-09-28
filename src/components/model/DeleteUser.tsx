@@ -9,8 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "../../redux/store";
-import {  closeDeleteModel } from "../../redux/reducers/userSlice";
-
+import {  closeDeleteModel, deleteSpecificUsers } from "../../redux/reducers/userSlice";
 
 
 const DeleteUser = () => {
@@ -19,17 +18,14 @@ const DeleteUser = () => {
   const { selectedUser, isDeleteModel } = useSelector(
     (state: RootState) => state.user
   );
-
   const handleClose = () => {
     dispatch(closeDeleteModel());
   };
 
   const handleDelete = () => {
     if (!selectedUser) return;
-
-    console.log("Delete user:", selectedUser.id);
-
-
+    // console.log("Delete user:", selectedUser.id);
+    dispatch(deleteSpecificUsers(selectedUser));
     dispatch(closeDeleteModel());
   };
 
