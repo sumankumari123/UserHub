@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
     const dispatch = useDispatch<AppDispatch>();
-
+    const [searchText,setSearchText] = useState("")
 const searchUser = useSelector((state: RootState) => state.user.searchUser);
 
   return (
@@ -36,12 +36,14 @@ const searchUser = useSelector((state: RootState) => state.user.searchUser);
         </div>
 
         {/* Search Bar */}
-        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+        <div
+         onClick={()=>dispatch(searchInputText(searchText))}
+        className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
           <input
             type="text"
             placeholder="Search posts..."
-            value={searchUser}
-            onChange={(e) => dispatch(searchInputText(e.target.value))}
+            value={searchText}
+            onChange={(e) =>setSearchText(e.target.value)}
             className="px-4 py-2 w-64 outline-none"
           />
 

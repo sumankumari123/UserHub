@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, openDeleteModel } from "../redux/reducers/userSlice";
@@ -14,15 +14,27 @@ import DeleteUser from "./model/DeleteUser";
 const AllPosts = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { userData, loading, error } = useSelector<
-    RootState,
-    RootState["user"]
-  >((state) => state.user);
+    const {
+    userData,
+    loading,
+    error,
+    searchUser,
+  } = useSelector((state: RootState) => state.user);
+
+  const searchText = searchUser.toLowerCase().trim();
+
+    const userFilterData = searchText
+    ? userData.filter((user) =>
+        user.name.toLowerCase().includes(searchText)
+      )
+    : userData;
+// console.log("userFilterData", userFilterData)
 
   // Fetch users when component loads
   useEffect(() => {
     dispatch(fetchUsers());
-  }, [dispatch]);
+    
+  }, [dispatch, searchUser]);
 
   return (
     <>
@@ -58,10 +70,10 @@ const AllPosts = () => {
 
               <p className="mt-1">{error}</p>
             </div>
-          ) : userData.length > 0 ? (
+          ) : userFilterData.length > 0 ? (
             // Data
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {userData.map((user) => (
+              {userFilterData.map((user) => (
                 <div
                   key={user.id}
                   className="w-[25rem] h-[18rem] bg-white rounded-xl shadow-md p-5
