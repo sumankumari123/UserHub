@@ -21,6 +21,9 @@ const AllPosts = () => {
     searchUser,
   } = useSelector((state: RootState) => state.user);
 
+  const [currentPage, setCurrentPage] = useState(1);
+const usersPerPage = 6;
+
   const searchText = searchUser.toLowerCase().trim();
 
     const userFilterData = searchText
@@ -30,15 +33,30 @@ const AllPosts = () => {
     : userData;
 // console.log("userFilterData", userFilterData)
 
+const indexOfLastUser = currentPage * usersPerPage;
+const indexOfFirstUser = indexOfLastUser - usersPerPage;
+
+const currentUsers = userFilterData.slice(
+  indexOfFirstUser,
+  indexOfLastUser
+);
+
+const totalPages = Math.ceil(userFilterData.length / usersPerPage);
+
   // Fetch users when component loads
   useEffect(() => {
     dispatch(fetchUsers());
-    
   }, [dispatch, searchUser]);
+
+   // Reset page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchUser]);
+
 
   return (
     <>
-      <div className="min-h-screen bg-gray-100 p-6">
+      <div className="min-height-[90vh] bg-gray-100 p-6">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             All Posts
@@ -70,13 +88,13 @@ const AllPosts = () => {
 
               <p className="mt-1">{error}</p>
             </div>
-          ) : userFilterData.length > 0 ? (
+          ) : currentUsers.length > 0 ? (
             // Data
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {userFilterData.map((user) => (
+              {currentUsers.map((user) => (
                 <div
                   key={user.id}
-                  className="w-[25rem] h-[18rem] bg-white rounded-xl shadow-md p-5
+                  className="w-[25rem] h-[14rem] bg-white rounded-xl shadow-md p-5
                 hover:shadow-lg transition flex flex-col"
                 >
                   {/* User Information */}
@@ -139,6 +157,40 @@ const AllPosts = () => {
         </div>
       </div>
 
+
+  {/* Pagination */}
+
+<div className="flex justify-center items-center gap-2 mt-8">
+  <button
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage((prev) => prev - 1)}
+    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+  >
+    Previous
+  </button>
+
+  {Array.from({ length: totalPages }, (_, index) => (
+    <button
+      key={index + 1}
+      onClick={() => setCurrentPage(index + 1)}
+      className={`px-4 py-2 rounded ${
+        currentPage === index + 1
+          ? "bg-blue-600 text-white"
+          : "bg-gray-200"
+      }`}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    disabled={currentPage === totalPages}
+    onClick={() => setCurrentPage((prev) => prev + 1)}
+    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>
       {/* Model component */}
       <EditUserDrawer />
       <DeleteUser />

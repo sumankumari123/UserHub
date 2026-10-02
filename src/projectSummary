@@ -40,4 +40,8 @@
 // add edit drawer, on click edit icon in AllPosts page
 // add model, on click delete icon in AllPosts page
  // Add edit logic in edit drawer and add edit logic in Redux API Call 
+ // Add Search logic
+ //Implemente Pagination logic
+
+
  
